@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TinyAGK</title>
+
+  <!-- All JS dependencies are vendored locally — works fully offline -->
+  <script type="importmap">
+  {
+    "imports": {
+      "vue":                 "./editor/assets/js/vue.js",
+      "vue-demi":            "./editor/assets/js/vue-demi.js",
+      "@vue/devtools-api":   "./editor/assets/js/vue-devtools-api.js",
+      "pinia":               "./editor/assets/js/pinia.js"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="./editor/assets/css/editor.css">
+</head>
+<body>
+
+<div id="app"></div>
+
+<script type="module" src="./editor/main.js"></script>
+
+</body>
+</html>

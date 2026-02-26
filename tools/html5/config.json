@@ -1,0 +1,10 @@
+{
+    "USE_WINE": true,
+    "WINEPREFIX": "$HOME/.wine-construct2",
+    "AGK_COMPILER": "/Users/marcello/Documents/projects/AGK/AppGameKit Studio/Tier 1/Compiler/AGKCompiler64.exe",
+    "COMPILE_MODE": "bytecode",
+    "AGK_COMPILE_OUTPUT": "../../output",
+    "AGK_STUDIO_HTML5_DIR": "/Users/marcello/Documents/projects/AGK/AppGameKit Studio/media/data/html5",
+    "MODE": "3D",
+    "AGK_STUDIO_HTML5_OUTPUT_DIR": "../../output/html5"
+}

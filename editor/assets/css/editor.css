@@ -1,0 +1,88 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0d1117;
+  color: #c9d1d9;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  height: 100vh;
+  padding: 24px;
+}
+
+/* #app is the flex column so its children (h1, controls, log) fill correctly */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+}
+
+h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #58a6ff;
+  letter-spacing: 0.04em;
+}
+
+/* ── Controls bar ─────────────────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+label {
+  font-size: 13px;
+  color: #8b949e;
+}
+
+input[type="color"] {
+  width: 48px;
+  height: 36px;
+  border: 2px solid #30363d;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  padding: 2px;
+}
+
+button {
+  padding: 8px 22px;
+  background: #238636;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+button:hover:not(:disabled) { background: #2ea043; }
+button:disabled { background: #21262d; color: #484f58; cursor: not-allowed; }
+
+.status {
+  font-size: 12px;
+  color: #8b949e;
+  font-style: italic;
+  min-width: 200px;
+}
+
+/* ── Log panel ────────────────────────────────────────────────────────────── */
+.log {
+  flex: 1;
+  background: #010409;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #c9d1d9;
+}
+
+.log-ok   { color: #3fb950; }
+.log-err  { color: #f85149; }
+.log-info { color: #79c0ff; }
