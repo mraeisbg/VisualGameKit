@@ -1,13 +1,12 @@
-import { defineComponent }   from "vue";
-import { usePreviewStore }   from "../stores/preview.js";
+import { defineComponent } from "vue";
+import { usePreviewStore } from "../stores/preview.js";
 import { AGC_FILE, BUILD_DIR, OUTPUT_DIR, SHELL } from "../utils/paths.js";
-import AppControls           from "./AppControls.js";
-import AppLog                from "./AppLog.js";
+import AppLog from "./AppLog.js";
 
 export default defineComponent({
   name: "App",
 
-  components: { AppControls, AppLog },
+  components: { AppLog },
 
   setup() {
     const store = usePreviewStore();
@@ -22,8 +21,13 @@ export default defineComponent({
   },
 
   template: `
-    <h1>TinyAGK Preview</h1>
-    <app-controls />
+    <h1>VisualGameKit Preview</h1>
+    <div class="controls">
+    <label for="colorPicker">Background color</label>
+    <input type="color" id="colorPicker" v-model="store.bgColor">
+    <button :disabled="store.busy" @click="store.runPreview()">▶ Preview</button>
+    <span class="status">{{ store.status }}</span>
+    </div>
     <app-log />
   `,
 });

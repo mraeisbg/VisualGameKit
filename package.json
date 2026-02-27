@@ -1,16 +1,17 @@
 {
-  "name": "tinyagk",
+  "name": "visualgamekit",
   "version": "0.1.0",
-  "description": "TinyAGK — AppGameKit Studio preview editor",
+  "description": "VisualGameKit",
   "main": "index.html",
   "bg-script": "index.js",
   "window": {
-    "title": "TinyAGK",
+    "title": "VisualGameKit",
     "width": 960,
     "height": 680,
     "position": "center",
     "frame": true,
-    "show": true
+    "show": true,
+    "toolbar": true
   },
   "chromium-args": "--enable-experimental-web-platform-features",
   "node-remote": "http://127.0.0.1/*"

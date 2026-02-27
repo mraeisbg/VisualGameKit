@@ -1,11 +1,11 @@
 import { defineComponent, ref, watch, nextTick } from "vue";
-import { usePreviewStore }                        from "../stores/preview.js";
+import { usePreviewStore } from "../stores/preview.js";
 
 export default defineComponent({
   name: "AppLog",
 
   setup() {
-    const store  = usePreviewStore();
+    const store = usePreviewStore();
     const logRef = ref(null);
 
     // Auto-scroll to bottom whenever entries are added
@@ -25,7 +25,7 @@ export default defineComponent({
       <span
         v-for="entry in store.logEntries"
         :key="entry.id"
-        :class="entry.cls"
+        :class="entry.cssclass"
       >{{ entry.text }}</span>
     </div>
   `,

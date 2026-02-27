@@ -1,47 +1,35 @@
-import { defineStore }                      from "pinia";
+import { defineStore } from "pinia";
 import { APP_DIR, AGC_FILE, BUILD_DIR, OUTPUT_DIR, SHELL } from "../utils/paths.js";
-import { hexToRgb }                          from "../utils/helpers.js";
+import { MIME } from "../utils/helpers.js";
+import { hexToRgb } from "../utils/helpers.js";
+import { config } from "../utils/config.js";
 
-// ── Node globals (injected by NW.js) ──────────────────────────────────────
-const fs    = require("fs");
-const path  = require("path");
-const http  = require("http");
+const fs = require("fs");
+const path = require("path");
+const http = require("http");
 const spawn = require("child_process").spawn;
 
-// ── MIME map ──────────────────────────────────────────────────────────────
-const MIME = {
-  ".html": "text/html",
-  ".js":   "application/javascript",
-  ".mem":  "application/octet-stream",
-  ".data": "application/octet-stream",
-  ".png":  "image/png",
-  ".svg":  "image/svg+xml",
-};
-
-// ── Server + preview window singletons (not reactive) ────────────────────
-let server     = null;
+let server = null;
 let serverPort = 0;
 let previewWin = null;
 
-// ── Store ─────────────────────────────────────────────────────────────────
 export const usePreviewStore = defineStore("preview", {
   state: () => ({
-    bgColor:    "#080e14",
-    status:     "Ready",
-    busy:       false,
-    logEntries: [],   // { id, text, cls }
+    bgColor: "#080e14", // TODO: just for the preview
+    status: "Ready",
+    busy: false,
+    logEntries: [],
   }),
 
   actions: {
-    // ── Log helpers ───────────────────────────────────────────────────
-    addLog(text, cls = "") {
-      this.logEntries.push({ id: Date.now() + Math.random(), text, cls });
+    addLog(text, cssclass = "") {
+      this.logEntries.push({ id: Date.now() + Math.random(), text, cssclass });
     },
     clearLog() {
       this.logEntries = [];
     },
 
-    // ── Utilities ─────────────────────────────────────────────────────
+    // TODO: only for the preview and testing
     writeAgc(r, g, b) {
       let src = fs.readFileSync(AGC_FILE, "utf8");
       src = src.replace(
@@ -51,19 +39,21 @@ export const usePreviewStore = defineStore("preview", {
       fs.writeFileSync(AGC_FILE, src, "utf8");
     },
 
-    // ── Build ─────────────────────────────────────────────────────────
     runBuild() {
       return new Promise((resolve, reject) => {
-        const cmd = `node build.js --project "${path.join(APP_DIR, "examples", "game1")}" --config "${path.join(BUILD_DIR, "config.json")}"`;  
+        const cmd = `node build.js --project "${path.join(APP_DIR, "examples", "game1")}" --config "${path.join(BUILD_DIR, "config.json")}"`;
         this.addLog(`  shell: ${SHELL} -lc\n  cmd:   ${cmd}\n`);
 
+
+        // Capture standard output and errors from the build process
         const proc = spawn(SHELL, ["-lc", cmd], {
-          cwd:   BUILD_DIR,
+          cwd: BUILD_DIR,
           stdio: ["ignore", "pipe", "pipe"],
         });
 
         proc.stdout.on("data", d => this.addLog(d.toString()));
         proc.stderr.on("data", d => this.addLog(d.toString(), "log-err"));
+
         proc.on("error", err => reject(new Error(`Failed to launch shell: ${err.message}`)));
         proc.on("close", code => {
           if (code === 0) resolve();
@@ -72,7 +62,6 @@ export const usePreviewStore = defineStore("preview", {
       });
     },
 
-    // ── HTTP server ───────────────────────────────────────────────────
     ensureServer() {
       return new Promise((resolve, reject) => {
         if (server) { resolve(serverPort); return; }
@@ -82,12 +71,12 @@ export const usePreviewStore = defineStore("preview", {
           if (!urlPath || urlPath === "/") urlPath = "/AGKPlayer.html";
 
           const filePath = path.join(OUTPUT_DIR, urlPath);
-          const ext      = path.extname(filePath).toLowerCase();
+          const ext = path.extname(filePath).toLowerCase();
 
           try {
             const data = fs.readFileSync(filePath);
             res.writeHead(200, {
-              "Content-Type":  MIME[ext] || "application/octet-stream",
+              "Content-Type": MIME[ext] || "application/octet-stream",
               "Cache-Control": "no-store",
             });
             res.end(data);
@@ -105,7 +94,6 @@ export const usePreviewStore = defineStore("preview", {
       });
     },
 
-    // ── Preview window ────────────────────────────────────────────────
     openOrReloadPreview(port) {
       const url = `http://127.0.0.1:${port}/AGKPlayer.html`;
       this.addLog(`\n► Preview: ${url}\n`, "log-info");
@@ -122,19 +110,18 @@ export const usePreviewStore = defineStore("preview", {
       }
 
       nw.Window.open(url, {
-        title:    "TinyAGK Preview",
-        width:    1280,
-        height:   720,
-        position: "center",
-        frame:    true,
-        show:     true,
+        title: config.title,
+        width: config.width,
+        height: config.height,
+        position: config.position,
+        frame: config.frame,
+        show: config.show,
       }, (win) => {
         previewWin = win;
         win.on("closed", () => { previewWin = null; });
       });
     },
 
-    // ── Main pipeline ─────────────────────────────────────────────────
     async runPreview() {
       if (this.busy) return;
       this.busy = true;
@@ -143,6 +130,7 @@ export const usePreviewStore = defineStore("preview", {
       const { r, g, b } = hexToRgb(this.bgColor);
 
       try {
+        // TODO: only for testing
         this.status = "Writing main.agc…";
         this.addLog(`► Writing SetClearColor(${r}, ${g}, ${b}) to main.agc\n`, "log-info");
         this.writeAgc(r, g, b);

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 "use strict";
 
+// TODO: Need to check
+
 /**
  * build.js — AGK compile + HTML5 export (Node.js port of run_agk.sh + build_html5.py)
  * Usage:

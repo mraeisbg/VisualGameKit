@@ -1,5 +1,3 @@
-// ── General-purpose utility functions ─────────────────────────────────────
-
 /**
  * Convert a hex colour string to an { r, g, b } object (0-255 each).
  * @param {string} hex  e.g. "#1a2b3c" or "1a2b3c"
@@ -36,11 +34,11 @@ export function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
-/**
- * Capitalise the first letter of a string.
- * @param {string} str
- */
-export function capitalize(str) {
-  if (!str) return str;
-  return str[0].toUpperCase() + str.slice(1);
-}
+export const MIME = {
+  ".html": "text/html",
+  ".js": "application/javascript",
+  ".mem": "application/octet-stream",
+  ".data": "application/octet-stream",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+};
