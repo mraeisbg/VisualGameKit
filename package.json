@@ -6,12 +6,11 @@
   "bg-script": "index.js",
   "window": {
     "title": "VisualGameKit",
-    "width": 960,
-    "height": 680,
+    "width": 1408,
+    "height": 792,
     "position": "center",
     "frame": true,
-    "show": true,
-    "toolbar": true
+    "show": true
   },
   "chromium-args": "--enable-experimental-web-platform-features",
   "node-remote": "http://127.0.0.1/*"
